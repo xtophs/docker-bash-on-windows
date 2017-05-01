@@ -14,13 +14,14 @@ Client:
 Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 ```
 
-That error may be quite puzzling, especially if you have [Docker for Windows](https://docs.docker.com/docker-for-windows/) already running on your machine. 
+That error may be quite puzzling since the Docker install succeeds from winthin the bash window. However, the docker deamon is not - as the error states - running in the subsystem. `ps -e` will confirm that there is no `dockerd`. 
 
-You can, however, use the docker client in bash to connect to the docker engine running in Windows on the same machine.
+If you already have Docker for Windows (https://docs.docker.com/docker-for-windows/) running on your machine it's running outside of the WSL (the Windows Subsystem for Linux). Docker for Windows by listens for commands from the client on TCP and Named Pipes. The named pipe isn't accessible from the WSL, but the client can connect from WSL to the docker Windows Service via TCP. 
 
 Sounds backwards, but it's true. How? Easy:
 
-1. Launch a [bash window](https://msdn.microsoft.com/en-us/commandline/wsl/about)
+0. If you don't already, [Install Docker for Windows](https://docs.docker.com/docker-for-windows/)
+1. Launch a [WSL bash window](https://msdn.microsoft.com/en-us/commandline/wsl/about)
 2. Follow installation steps for [Docker on Ubuntu](https://docs.docker.com/engine/installation/linux/ubuntu/#install-using-the-repository) - since Windows subsystem is based on Ubuntu
 3. Connect to the docker daemon using tcp instead of the linux socket or a windows pipe. Either add a -H pararmeter when you invoke docker
 
